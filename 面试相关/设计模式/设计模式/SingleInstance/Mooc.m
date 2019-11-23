@@ -10,6 +10,24 @@
 
 @implementation Mooc
 
++ (id)shared {
+    
+    static Mooc *instance = nil;
+    if (NSThread.isMainThread) {
+        if (!instance) {
+            instance = [[Mooc alloc] init];
+        }
+    }
+    else {
+        dispatch_sync(dispatch_get_main_queue(), ^{
+            if (!instance) {
+                instance = [[Mooc alloc] init];
+            }
+        });
+    }
+    return instance;
+}
+
 + (id)sharedInstance {
     // 静态局部变量
     static Mooc *instance = nil;
