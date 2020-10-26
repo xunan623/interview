@@ -150,6 +150,160 @@ public class BinarySearchTree<T: Comparable> {
     }
     
     /// 搜索
+    public func search(value: T) -> BinarySearchTree? {
+        var node: BinarySearchTree? = self
+        while let n = node {
+            if value < n.value {
+                node = n.left
+            } else if value > n.value {
+                node = n.right
+            } else {
+                return node
+            }
+            return nil
+        }
+            
+    }
+    
+    /// 遍历
+    public func traverseInOrder(process: (T) -> Void) {
+        left?.traverseInOrder(process: process)
+        process(value)
+        right?.traverseInOrder(process: process)
+    }
+    
+    public func traversePreOrder(process: (T) -> Void) {
+        process(value)
+        left?.traversePreOrder(process: process)
+        right?.traversePreOrder(process: process)
+    }
+    
+    public func traversePostOrder(process: (T) -> Void) {
+        left?.traversePostOrder(process: process)
+        right?.traversePostOrder(process: process)
+        process(value)
+    }
+    
+    public func map(formula: (T) -> T) -> [T] {
+        var a = [T]()
+        if let left = left {
+            a += left.map(formula: formula)
+        }
+        a.append(formula(value))
+        if let right = right {
+            a += right.map(formula: formula)
+        }
+        return a
+    }
+    
+    public func toArray() -> [T] {
+        return map{ $0 }
+    }
+    
+    private func reconnectParentTo(node: BinarySearchTree?) {
+        if let parent = parent {
+            if isLeftChid {
+                parent.left = node
+            } else {
+                parent.right = node
+            }
+        }
+        node?.parent = parent
+    }
+    
+    public func minimum() -> BinarySearchTree {
+        var node = self
+        while let next = node.left {
+            node = next
+        }
+        return node
+    }
+    
+    public func maximum() -> BinarySearchTree {
+        var node = self
+        while let next = node.right {
+            node = next
+        }
+        return node
+    }
+    
+    @discardableResult public func remove() -> BinarySearchTree? {
+        let replacement: BinarySearchTree?
+        
+        if let right = right {
+            replacement = right.minimum()
+        } else if let left = left {
+            replacement = left.maximum()
+        } else {
+            replacement = nil
+        }
+        
+        replacement?.remove()
+        
+        replacement?.right = right
+        replacement?.left = left
+        right?.parent = replacement
+        left?.parent = replacement
+        reconnectParentTo(node: replacement)
+        
+        parent = nil
+        left = nil
+        right = nil
+        
+        return replacement
+    }
+    
+    /// 深度和高度
+    public func height() -> Int {
+        if isLeaf {
+            return 0
+        } else {
+            return 1 + max(left?.height() ?? 0, right?.height() ?? 0)
+        }
+    }
+    
+    /// 深度:节点到根节点的距离
+    public func depth() -> Int {
+        var node = self
+        var edges = 0
+        while let parent = node.parent {
+            node = parent
+            edges += 1
+        }
+        return edges
+    }
+    
+    /// 前驱节点
+    public func predecessor() -> BinarySearchTree<T>? {
+        if let left = left {
+            return left.maximum()
+        } else {
+            var node = self
+            while let parent = node.parent {
+                if parent.value < value {
+                    return parent
+                }
+                node = parent
+            }
+            return nil
+        }
+    }
+    
+    /// 后继节点
+    public func successor() -> BinarySearchTree<T>? {
+      if let right = right {
+        return right.minimum()
+      } else {
+        var node = self
+        while let parent = node.parent {
+          if parent.value > value { return parent }
+          node = parent
+        }
+        return nil
+      }
+    }
+    
+    /// 二叉搜索树
     
 }
 
@@ -176,3 +330,22 @@ tree.insert(value: 1)
 
 let treeNode = BinarySearchTree<Int>(array: [7, 2, 5, 10, 9, 1])
 print(treeNode)
+
+tree.search(value: 5)
+
+tree.traverseInOrder { (value) in
+    print(value)
+}
+
+tree.toArray()
+
+tree.height()
+
+/// 9 到根节点的深度
+if let node9 = tree.search(value: 9) {
+    node9.depth()
+}
+
+if let node1 = tree.search(value: 1) {
+  node1.insert(value: 100)
+}
