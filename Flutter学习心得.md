@@ -31,3 +31,13 @@ pub finished with exit code 1
 说明有网络 但是没有权限
 
 sudo flutter pub publish
+
+
+
+## Tabbar抖动问题
+
+CustomTabBar-master
+
+## 侧滑删除
+
+flutter_sunny_demo-master
