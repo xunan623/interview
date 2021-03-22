@@ -87,6 +87,8 @@
 **笔试题**
 ![查找父类面试题](https://raw.githubusercontent.com/xunan623/xunan623.github.io/master/RunTime/查找父类面试题.png)
 
+	Phone Phone
+	
 **消息传递**
 
 void objc_msgSend(void /* id self, SEL op, ... */)

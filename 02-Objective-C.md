@@ -130,7 +130,7 @@ addObserverforKeyPath(key)->运行时动态创建NSKVONotify_A类 然后将原�
 
 1. 读写权限
 	
-	readonly
+	readonly (对象使用之后,只能使用getter方法,不能使用setter方法, 可以使用,不能改)
 	
 	readwrite(默认)
 
@@ -206,7 +206,8 @@ Objective-C->C\C++->汇编语言->机器语言
 
 1. 一个NSObject对象占用多少内存?
 
-	NSObject实质上是一个结构体isa指针 64位处理器下占用8字节
+	NSObject实质上是一个结构体isa指针 64位处理器下占用8字节,
+	分配了16字节存储空间给NSObject对象
 
 2. Objective-C的对象,类主要是基于C\C++的什么数据结构实现的?
 
@@ -299,4 +300,45 @@ Objective-C->C\C++->汇编语言->机器语言
 ###KVO
 
 1. iOS用什么方式实现对一个对象的KVO?
+
+		当一个对象使用了KVO监听,iOS系统会修改这个对象的isa指针,
+		改为指向一个全新的动态RunTime创建的子类,子类用用自己的set方法实现,内部会调用:
+		1. willChangValueForKey:
+		2. 原来的setter方法实现
+		3. didChangValueForKey:, 这个方法内部又会调用监听器(Observer)的监听方法
+
 2. 如何手动触发KVO?
+
+		willChangValueForKey:
+		修改值
+		didChangValueForKey:
+		
+		
+###KVC
+
+1. 通过KVC修改属性会触发KVO吗?
+	
+		会触发KVO
+
+2. KVC的赋值和取值是怎样的? 原理是什么?
+
+###Category
+
+1. category的实现原理?
+
+		category编译之后的底层结构是struct category_t,里面存储着分类的对象方法,类方法,属性,协议信息
+		在程序运行的时候,runtime会将category的数据合并到类信息中(类对象,元类对象中)
+
+2. Category和Class Extension的区别是什么?
+
+		Class Extension在编译的时候,它的数据就已经包含在类信息中
+		Category是在运行时,才会将数据合并到类信息中
+		
+3. Category中有load方法吗?load方法是什么时候调用的?load方法能继承吗?
+	
+		有 
+		
+
+4. load,initialize方法的区别是什么?它们在Category中调用的顺序?以及出现继承时他们之间的调用过程?
+
+5. Category能否添加成员变量?如果可以,如何给Category添加成员变量?

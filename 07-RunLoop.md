@@ -100,6 +100,8 @@ RunLoop的Mode:
 
 自己创建的线程默认是没有RunLoop的
 
+RunLoop保存在一个全局的NSDictionary里,线程作为key,RunLoop作为Value
+
 **怎样实现一个常驻线程?**
 	
 	1. 为当前线程开启一个RunLoop
@@ -112,3 +114,19 @@ RunLoop的Mode:
 **怎样保证子线程数据回来更新UI的时候不打断用户的滑动操作?**
 
 滑动是在UITackingRunLoopMode  子线程包装放在主线程kCFRunLoopDefaultMode下
+
+
+****
+
+##李明杰RunLoop
+
+1. 讲讲RunLoop,项目中有用到吗?
+2. RunLoop的内部实现逻辑?
+3. RUnLoop和线程有什么样的关系?
+4. timer和RunLoop的关系?
+5. 程序中每3s响应一次NSTimer,当拖动TableView时Timer可能无法响应怎么解决?
+6. RunLoop是怎么想用用户操作的,具体流程是什么样的?
+7. 说说RunLoop的几种状态
+8. RunLoop的mode作用是什么?
+
+
