@@ -67,7 +67,7 @@ __block相关面试题:
 		int(^Block)(int) = ^int(int num) {
 			return num * multiplier;
 		}
-		Block(2); // 8
+		Block(2); // 12
 	}
 	
 __block修饰的变量变成了对象
