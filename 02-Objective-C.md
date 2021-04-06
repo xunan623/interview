@@ -425,8 +425,131 @@ addObserverforKeyPath(key)->运行时动态创建NSKVONotify_A类 然后将原�
 		1.类里和分类都有,则优先会找分类里的重名方法
 		2.多个分类里有同名方法, 则取决于编译顺序, while(i--), 倒序遍历, 最后面的分类会放在合并在类方法的方法列表的最前面, 所以最后添加编译的最先执行
 	
+	
+###关联对象
+
+	AssocationManager
+	AssiocationHashMap
+	维护一个全局的map表 以object为key, AssiocationMap为value
 		
 ###Extension扩展
 
 	类的扩展在编译时完成,当项目在编译时就已经将扩展的属性,方法合并到类里去了
 	分类是在运行时机制合并到类信息里的
+	
+###Block
+
+	执行的代码包装起来,在合适的时机调用
+	
+1. block的本质
+
+		block本质上也是一个OC对象,它内部也有个isa指针
+		block是封装了函数调用以及函数调用环境的OC对象
+		
+		int age = 10;
+		void (^block)(int, int) = ^(int a, int b){
+           NSLog(@"这是个block --%d", age);
+       	};
+       	block(10, 10);
+		
+		struct __block_impl {
+			void *isa;
+			int Flags;
+			int Reserved;
+			void *FuncPtr;
+		}
+		
+		struct __main_block_desc_0 {
+			size_t reserved;
+			size_t Block_size;
+		}
+		
+		struct __main_block_impl_0 {
+			struct __block_impl impl;
+			struct __main_block_desc_0* Desc;
+			int age;
+			__main_block_impl_0(void *fp, struct __main_block_desc_0* desc, int age, int flags=0) : age(_age) {
+				impl.isa = *_NSConcreteStackBlock;
+				impl.Flags = flags;
+				impl.FuncPtr = fp;
+				Desc = desc;
+			}
+		}
+		
+
+2. block的类型
+
+		block有3种类型, 可以通过调用class方法或者isa指针查看具体类型, 最终都是继承自NSBlock类型
+		
+		一切以运行时结果为准
+		
+		__NSGloabBlock__ 编译后 (_NSConcreteGlobalBlock) 数据区   copy后什么也不做
+		Gloal:没有访问auto变量
+		void (^block)(void) = ^{
+			NSLog("block -----");
+		};
+		或者:
+		static init age = 10;
+		void (^block)(void) = ^{
+			NSLog("block ----- %d", age);
+		};
+		NSLog("%@", [block class]);
+		
+		
+		__NSStackBlock__	编译后 (_NSConcreteStackBlock)  栈区:放局部变量,系统自动分配内存,自动销毁 copy后复制到堆
+		Stack:访问了auto变量
+		int age = 10;
+		void (^block)(void) = ^{
+			NSLog("block------ %d", age);
+		};
+		
+		
+		__NSMallocBlock__ 编译后 (_NSConcreteMallocBlock) 堆区:动态分配内存, 需要开发者申请内存,管理内存
+		__NSStackBlock__调用了copy   copy引用计数增加
+		
+		
+		[block class]
+		__NSGlobalBlock__
+		
+		[[block class] superclass]
+		__NSGlobalBlock
+		
+		[[[block class] superclass] superclass]
+		NSBlock
+		
+		[[[[block class] superclass] superclass] superclass]
+		NSObject
+		
+	
+3. block的copy操作
+	
+		在ARC环境下, 编译器会自动将栈上的block复制到堆上
+		
+		1.block作为函数返回值时
+
+		typedef void (^TestBlock)(void);
+
+		TestBlock test() {
+			return ^{
+				NSLog("----")
+			};
+		}
+		
+		2.将block赋值给__strong指针时
+		3.block作为Cocoa API中方法名含有usingBlock的方法参数时
+		4.block作为gcd方法参数
+		
+4. 对象类型的auto变量
+
+	__weak修复的对象在生成c++代码时候会报错, 需要
+	
+	xcrun -sdk iphoneos clang -arch arm64 -rewrite-objc -fobjc-arc -fobjc-runtime=ios-8.0.0 main.m
+	
+问:当block内部访问了对象类型的auto变量时
+	
+	1. 只要block在栈上的,都不会对auto对象进行强引用
+	2. 如果block被拷贝到堆上
+		会调用block内部的copy函数
+		copy函数内部会调用_Block_object_assign函数
+		_Block_object_assign函数会根据auto变量的修饰符(__strong, __weak, __unretained)做出相应的操作,类似于retain(形成强引用,弱引用)
+	3.如果
