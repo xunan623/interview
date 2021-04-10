@@ -61,3 +61,7 @@ let a3: Int? = 1
 let b3: Int = 2
 let c3 = a3 ?? b3
 print(c3)
+
+// 隐式解包的可选项
+let numX: Int! = 10
+let numX1: Int = numX
