@@ -9,5 +9,6 @@
         <page name='04-函数'/>
         <page name='05-枚举'/>
         <page name='06-可选项'/>
+        <page name='07-闭包'/>
     </pages>
 </playground>
