@@ -38,3 +38,14 @@ print(fc(1))
 print(fc(2))
 print(fc(3))
 print(fc(4))
+
+
+func getFristPosition(_ v1: Int, _ v2: () -> Int) -> Int {
+    return v1 > 0 ? v1 : v2()
+}
+
+var testClouseFunc = getFristPosition(-10) { () -> Int in
+    let a = 100
+    let b = 100
+    return a + b
+}
