@@ -304,6 +304,9 @@ addObserverforKeyPath(key)->运行时动态创建NSKVONotify_A类 然后将原�
 		
 8. weak的原理
    https://www.jianshu.com/p/16a95390f235
+   
+9. 怎么通过RunLoop监听页面耗时?
+
 ### isa,superClass总结
 		
 		1. instance(实例对象)的isa指向class(类对象)
