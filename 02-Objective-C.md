@@ -306,6 +306,7 @@ addObserverforKeyPath(key)->运行时动态创建NSKVONotify_A类 然后将原�
    https://www.jianshu.com/p/16a95390f235
    
 9. 怎么通过RunLoop监听页面耗时?
+    主线程的 runloop 默认是开启的，ui 的更新也是在主线程，RunLoop 进入睡眠前会执行source0等方法，唤醒后要接收 mach_port 消息。所以如果执行source0或者接收 mach_port 消息，太耗时，就会导致卡顿。所以可以通过监听 runloop 的状态来判断是否卡顿，设置一个时间阈值，超过获取堆栈信息，通过 plcrashreporter 去做，然后定位到是哪个地方卡顿，希望对你有帮助吧
 
 ### isa,superClass总结
 		
