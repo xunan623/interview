@@ -301,6 +301,9 @@ addObserverforKeyPath(key)->运行时动态创建NSKVONotify_A类 然后将原�
 		1. 成员变量的具体值存放在instance对象
 		2. 对象的方法,协议,成员变量存放在类对象
 		3. 类方法存在元类对象里
+		
+8. weak的原理
+   https://www.jianshu.com/p/16a95390f235
 ### isa,superClass总结
 		
 		1. instance(实例对象)的isa指向class(类对象)
