@@ -46,6 +46,7 @@
 40. 编译选项 whole module optmization 优化了什么
 41. 下面代码中nutating的作用是什么
 42. 如何让自定义对象支持字面量初始化
+43. dynamic framework 和 static framework的区别是什么
 	
 ###答案
 
@@ -579,6 +580,29 @@
 
 42. 如何让自定义对象支持字面量初始化
 
+	有几个协议, 分别是
 	
+	ExpressibleByArrayLiteral 可以由数组形式初始化
 	
+	ExpressibleByDictionaryLiteral 可以由字典形式初始化
+	
+	ExpressibleByNilLiteral 可以由nil值初始化
+	
+	ExpressibleByIntergerLiteral 可以由整数值初始化
+	
+	ExpressibleByFloatLiteral 可以由浮点数初始化
+	
+	ExpressibleByBooleanLiteral 可以由bool值初始化
+	
+	// 下面三种都是由字符串初始化, 上面两种包含由Unicode字符和特殊字符
+	
+	ExpressibleByUnicodeScalarLiteral
+	
+	ExpressibleByExtendedGraphemeClusterLiteral
+	
+	ExpressibleByStringLiteral
+
+43. dynamic framework 和 static framework的区别是什么
+
+	静态库和动态库, 静态库是每一个程序单独打包一份, 而动态库则是多个程序之间共享
 	
