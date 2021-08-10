@@ -78,3 +78,36 @@ for c in countDown {
 }
 print("end for in 2")
 
+
+func fib(n: Int) -> Int {
+    switch n {
+    case 0:
+        return 0
+    case 1:
+        return 1
+    case 2:
+        return 1
+    case 3:
+        return 2
+    default:
+        return fib(n: n - 1) + fib(n: n - 2) + fib(n: n - 3)
+    }
+}
+
+print(fib(n: 25))
+
+func tfib(n: Int) -> Int {
+    if n < 3 {
+        return n == 0 ? 0 : 1
+    }
+    var temp: Int, x = 0, y = 1, z = 1
+    for _ in 3...n {
+        temp = x + y + z
+        x = y
+        y = z
+        z = temp
+    }
+    return z
+}
+
+print(tfib(n: 25))
